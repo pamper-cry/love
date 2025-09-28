@@ -218,3 +218,34 @@ $('.close-btn').off('click').click(function() {
     // 确保没有event.preventDefault()
     window.location = './close.html';
 });
+
+// 添加留声机点击事件
+// 添加全局音频对象和播放状态
+let gramophoneAudio = null;
+let playbackProgress = 0;
+
+$('#gramophone').on('click', function(e) {
+  e.preventDefault();
+  
+  if (!gramophoneAudio) {
+    gramophoneAudio = new Audio('music/music.mp3');
+    gramophoneAudio.currentTime = playbackProgress;
+  }
+
+  if (gramophoneAudio.paused) {
+    gramophoneAudio.play();
+    $(this).addClass('playing');
+  } else {
+    playbackProgress = gramophoneAudio.currentTime;
+    gramophoneAudio.pause();
+    $(this).removeClass('playing');
+  }
+});
+
+// 添加播放结束监听
+if(gramophoneAudio) {
+  gramophoneAudio.addEventListener('ended', () => {
+    playbackProgress = 0;
+    $('#gramophone').removeClass('playing');
+  });
+}
